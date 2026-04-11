@@ -309,11 +309,11 @@ function renderAttacks() {
   const container = document.getElementById('prev-attacks');
   const typeIcon = __ASSET(TYPES[state.currentType].icon);
   const attackIcons = {
-    tipo: typeIcon,
+    type: typeIcon,
     normal: __ASSET('icons/attack_normal.avif'),
-    escudo: __ASSET('icons/shield.avif'),
-    reflector: __ASSET('icons/shield_reflector.avif'),
-    vida: __ASSET('icons/health.avif'),
+    shield: __ASSET('icons/shield.avif'),
+    reflect: __ASSET('icons/shield_reflector.avif'),
+    health: __ASSET('icons/health.avif'),
     cooldown: __ASSET('icons/cooldown.avif'),
     move_speed: __ASSET('icons/move_speed.avif'),
     move_accuracy: __ASSET('icons/move_accuracy.avif')
