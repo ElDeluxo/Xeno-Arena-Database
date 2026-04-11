@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nokemon — NMS Xeno Arena Card Generator</title>
+  <meta name="description"
+    content="Generate custom Pokémon-style combat cards for No Man's Sky creatures. Inspired by the Xeno Arena update.">
+  <link rel="icon" href="icons/logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ── Header ─────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="icons/logo.png" alt="Nokemon Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1 class="brand-title">NOKEMON</h1>
+          <p class="brand-sub">No Man's Sky · Xeno Arena Card Generator</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────── -->
+  <main class="app-main">
+
+    <!-- ========== LEFT: EDITOR ========== -->
+    <div class="editor-area">
+
+      <!-- NMS-style horizontal tab bar -->
+      <nav class="editor-tabs" id="editor-tabs">
+        <button class="tab-btn active" data-tab="info">
+          <img src="icons/genes.png" alt="Creature" class="tab-icon"><span>Creature</span>
+        </button>
+        <button class="tab-btn" data-tab="type">
+          <img src="icons/fire.avif" alt="Type" class="tab-icon"><span>Type</span>
+        </button>
+        <button class="tab-btn" data-tab="image">
+          <img src="icons/paw.webp" alt="Image" class="tab-icon"><span>Image</span>
+        </button>
+        <button class="tab-btn" data-tab="attacks">
+          <img src="icons/attack_normal.avif" alt="Attacks" class="tab-icon"><span>Attacks</span>
+        </button>
+        <button class="tab-btn" data-tab="attrs">
+          <img src="classes/CLASS.S.webp" alt="Attributes" class="tab-icon"><span>Attributes</span>
+        </button>
+      </nav>
+
+      <!-- Tab content area -->
+      <div class="editor-content">
+
+        <!-- ── TAB: Creature Info ── -->
+        <div class="tab-panel active" id="tab-info">
+          <div class="form-group">
+            <label for="inp-name">Creature Name</label>
+            <input type="text" id="inp-name" placeholder="Creature Name" maxlength="22">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="inp-hp">HP</label>
+              <input type="number" id="inp-hp" min="10" max="999" value="120">
+            </div>
+            <div class="form-group">
+              <label for="inp-rarity">Class</label>
+              <select id="inp-rarity">
+                <option value="1">Cz</option>
+                <option value="2">B</option>
+                <option value="3" selected>A</option>
+                <option value="4">S</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inp-number">Card Number</label>
+            <input type="text" id="inp-number" placeholder="001" maxlength="6" value="001">
+          </div>
+
+          <!-- Custom Font -->
+          <div class="font-section">
+            <div class="font-section-title">
+              <span>Aa</span> Custom Card Font
+            </div>
+            <div class="font-upload-row">
+              <input type="file" id="inp-font" accept=".ttf,.otf,.woff,.woff2" hidden>
+              <button class="font-upload-btn" id="btn-font-upload">
+                ↑ Upload Font
+              </button>
+              <span class="font-name-display" id="font-name-display">No font loaded</span>
+            </div>
+            <div class="font-scope-row">
+              <label class="font-scope-label">Apply to:</label>
+              <div class="font-scope-btns">
+                <button class="scope-btn active" data-scope="name" id="scope-name">Name only</button>
+                <button class="scope-btn" data-scope="card" id="scope-card">Whole card</button>
+              </div>
+            </div>
+            <button class="font-clear-btn" id="btn-font-clear" style="display:none">✕ Remove font</button>
+          </div>
+        </div>
+
+        <!-- ── TAB: Type ── -->
+        <div class="tab-panel" id="tab-type">
+          <p class="tab-hint">Select the creature's environment type. This changes the card's color scheme.</p>
+          <div class="type-grid" id="type-grid"><!-- filled by JS --></div>
+        </div>
+
+        <!-- ── TAB: Image & Flavor ── -->
+        <div class="tab-panel" id="tab-image">
+          <div class="image-drop-zone" id="image-drop-zone">
+            <input type="file" id="inp-image" accept="image/*" hidden>
+            <div class="drop-placeholder" id="drop-placeholder">
+              <div class="drop-icon">📷</div>
+              <p>Click to upload<br><span>JPG · PNG · WEBP</span></p>
+            </div>
+            <img id="drop-preview" class="drop-img-preview" style="display:none" alt="Creature">
+          </div>
+          <button class="btn-secondary" id="btn-remove-img" style="display:none; margin-top:8px">✕ Remove Image</button>
+
+          <div class="form-row" id="art-style-row" style="display:none; margin-top:16px;">
+            <div class="form-group" style="margin:0;">
+              <label for="inp-img-style">Art Style</label>
+              <select id="inp-img-style">
+                <option value="normal">Normal (Cropped)</option>
+                <option value="fit">Fit Whole Image</option>
+                <option value="full">Full Card Art</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:16px">
+            <label for="inp-flavor">Flavor Text</label>
+            <textarea id="inp-flavor" rows="3" maxlength="110"
+              placeholder="A creature of immense power, born from the cosmos..."></textarea>
+            <div class="char-counter" id="flavor-counter">0 / 110</div>
+          </div>
+        </div>
+
+        <!-- ── TAB: Attacks ── -->
+        <div class="tab-panel" id="tab-attacks">
+          <div id="attacks-editor"><!-- filled by JS --></div>
+        </div>
+
+        <!-- ── TAB: Attributes ── -->
+        <div class="tab-panel" id="tab-attrs">
+          <p class="tab-hint">Rate each attribute using the NMS class system.</p>
+          <div id="attributes-editor"><!-- filled by JS --></div>
+        </div>
+
+      </div><!-- /editor-content -->
+    </div><!-- /editor-area -->
+
+    <!-- ========== RIGHT: PREVIEW ========== -->
+    <section class="preview-panel">
+      <div class="preview-sticky">
+        <div class="preview-label">Live Preview</div>
+
+        <div class="card-wrapper">
+          <div class="card" id="card" data-type="fuego">
+            <img id="card-full-bg" class="card-full-bg" src="" style="display:none" alt="">
+            <div class="card-full-overlay"></div>
+            <div class="card-shine"></div>
+
+            <div class="card-header">
+              <div class="card-name-block">
+                <div class="card-stage">XENO CREATURE</div>
+                <div class="card-name" id="prev-name">Creature Name</div>
+              </div>
+              <div class="card-hp-block">
+                <span class="hp-label">HP</span>
+                <span class="hp-value" id="prev-hp">120</span>
+                <div class="card-type-badge" id="prev-type-icon">
+                  <img src="icons/fire.avif" alt="FIRE" class="type-badge-img">
+                </div>
+              </div>
+            </div>
+
+            <div class="card-illus-frame">
+              <div class="card-illus-inner" id="prev-illus">
+                <div class="illus-empty">
+                  <span>📷</span>
+                  <p>Upload your creature</p>
+                </div>
+              </div>
+              <div class="illus-caption">
+                <span class="illus-type-tag" id="prev-type-tag">FIRE</span>
+                <span class="illus-rarity-tag rating-a" id="prev-rarity-tag">A</span>
+              </div>
+            </div>
+
+            <div class="card-flavor" id="prev-flavor">...
+            </div>
+
+            <div class="card-hr"></div>
+
+            <div class="card-attacks" id="prev-attacks"><!-- filled by JS --></div>
+
+            <div class="card-hr"></div>
+
+            <div class="card-attrs">
+              <div class="card-attr-item">
+                <span class="attr-label">COMBAT POT.</span>
+                <span class="attr-rating rating-a" id="prev-combat">A</span>
+              </div>
+              <div class="card-attr-item">
+                <span class="attr-label">AGILITY</span>
+                <span class="attr-rating rating-b" id="prev-agility">B</span>
+              </div>
+              <div class="card-attr-item">
+                <span class="attr-label">HEALTH</span>
+                <span class="attr-rating rating-b" id="prev-health">B</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <span class="footer-num">No. <span id="prev-num">001</span></span>
+              <span class="footer-brand">NO MAN'S SKY · XENO ARENA</span>
+            </div>
+
+          </div>
+        </div>
+
+        <button class="btn-download" id="btn-download">
+          <span>⬇</span> Download Card
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="assets.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
