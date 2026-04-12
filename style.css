@@ -542,15 +542,16 @@ textarea {
   background: rgba(192, 160, 0, 0.1);
 }
 .type-btn[data-type="toxic"].active::after {
-  background: #D4B000;
-  box-shadow: 0 0 8px rgba(212, 176, 0, 0.7);
+  background: #80BB00;
+  box-shadow: 0 0 8px rgba(128, 187, 0, 0.7);
+
 }
 .type-btn[data-type="radioactive"].active {
   background: rgba(112, 170, 0, 0.1);
 }
 .type-btn[data-type="radioactive"].active::after {
-  background: #80BB00;
-  box-shadow: 0 0 8px rgba(128, 187, 0, 0.7);
+  background: #D4B000;
+  box-shadow: 0 0 8px rgba(212, 176, 0, 0.7);
 }
 .type-btn[data-type="desert"].active {
   background: rgba(144, 96, 48, 0.1);
@@ -835,18 +836,6 @@ textarea {
   --ctag: #7B2FBE;
 }
 .card[data-type="toxic"] {
-  --cp: #B8A000;
-  --cbg1: #FFFDE8;
-  --cbg2: #FFE840;
-  --cborder: #D4B000;
-  --cglow: rgba(212, 176, 0, .55);
-  --ctext: #5A4800;
-  --chr: #B8A000;
-  --cbadge: #C0A000;
-  --cfoot: rgba(184, 160, 0, .12);
-  --ctag: #B8A000;
-}
-.card[data-type="radioactive"] {
   --cp: #5A8800;
   --cbg1: #F0FFE0;
   --cbg2: #C4E860;
@@ -857,6 +846,20 @@ textarea {
   --cbadge: #628800;
   --cfoot: rgba(90, 136, 0, .12);
   --ctag: #5A8800;
+}
+
+.card[data-type="radioactive"] {
+
+  --cp: #B8A000;
+  --cbg1: #FFFDE8;
+  --cbg2: #FFE840;
+  --cborder: #D4B000;
+  --cglow: rgba(212, 176, 0, .55);
+  --ctext: #5A4800;
+  --chr: #B8A000;
+  --cbadge: #C0A000;
+  --cfoot: rgba(184, 160, 0, .12);
+  --ctag: #B8A000;
 }
 .card[data-type="desert"] {
   --cp: #7A4818;
