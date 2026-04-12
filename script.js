@@ -298,8 +298,8 @@ function renderCard() {
   renderAttrs();
   const glowMap = {
     fire: 'rgba(255,100,0,0.4)', tropical: 'rgba(93,192,0,0.4)',
-    anomalous: 'rgba(155,48,208,0.4)', toxic: 'rgba(212,176,0,0.4)',
-    radioactive: 'rgba(128,187,0,0.4)', desert: 'rgba(156,99,32,0.4)',
+    anomalous: 'rgba(155,48,208,0.4)', toxic: 'rgba(128,187,0,0.4)',
+    radioactive: 'rgba(212,176,0,0.4)', desert: 'rgba(156,99,32,0.4)',
     ice: 'rgba(48,176,204,0.4)', mechanical: 'rgba(26,74,175,0.4)',
   };
   document.querySelector('.card-wrapper').style.filter =
