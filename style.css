@@ -1611,3 +1611,130 @@ textarea {
   text-shadow: none !important;
   filter: none !important;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+  }
+
+  .app-header {
+    position: sticky;
+    top: 0;
+  }
+
+  .header-inner {
+    padding: 0 15px;
+  }
+
+  .brand-title {
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+
+  .app-main {
+    position: static;
+    display: flex;
+    flex-direction: column-reverse;
+    height: auto;
+    overflow: visible;
+  }
+
+  .editor-area {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-top: 1px solid var(--teal-dim);
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
+  .editor-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    scrollbar-width: none;
+    position: sticky;
+    top: 54px;
+    z-index: 100;
+    background: rgba(8, 18, 24, 0.98);
+  }
+
+  .editor-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    min-width: 90px;
+    flex: none;
+    padding: 12px 5px;
+  }
+
+  .editor-content {
+    overflow: visible;
+    height: auto;
+  }
+
+  .preview-panel {
+    width: 100%;
+    min-height: auto;
+    padding: 50px 0 30px 0;
+    overflow: visible;
+    background: radial-gradient(circle at center, rgba(77, 207, 207, 0.05) 0%, transparent 70%);
+  }
+
+  .preview-sticky {
+    position: static;
+  }
+
+  .card-wrapper {
+    transform: scale(0.9);
+    margin: 0 auto;
+    transform-origin: center top;
+  }
+
+  /* Form adjustments */
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .attack-type-name-dmg {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .type-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .glyph-picker {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .rating-btns {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-wrapper {
+    transform: scale(0.8);
+  }
+  
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .brand-sub {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  
+  .preview-panel {
+    padding: 20px 0 60px 0;
+  }
+}
