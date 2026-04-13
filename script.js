@@ -18,9 +18,10 @@ const state = {
   imageDataUrl: null,
   attacks: Array.from({ length: 5 }, () => ({ name: '', desc: '', dmg: '', attackType: 'type' })),
   attrs: { combat: 'A', agility: 'B', health: 'B' },
-  customFont: null,      
-  fontScope: 'name',     
+  customFont: null,
+  fontScope: 'name',
   imageStyle: 'normal',
+  glyphs: [],
 };
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildAttributesEditor();
   setupImageUpload();
   setupFontUpload();
+  setupGlyphs();
   setupFormListeners();
   setupDownload();
   renderCard();
@@ -221,6 +223,58 @@ function setupFontUpload() {
     });
   });
 }
+function setupGlyphs() {
+  const picker = document.getElementById('glyph-picker');
+  const btnBack = document.getElementById('btn-glyph-backspace');
+  const btnClear = document.getElementById('btn-glyph-clear');
+  
+  for (let i = 0; i < 16; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'glyph-btn';
+    btn.title = `Glyph ${i}`;
+    btn.innerHTML = `<img src="${__ASSET('icons/glyphs/glyph_' + i + '.webp')}" alt="Glyph ${i}">`;
+    btn.addEventListener('click', () => {
+      if (state.glyphs.length < 12) {
+        state.glyphs.push(i);
+        updateGlyphUI();
+        renderCard();
+      }
+    });
+    picker.appendChild(btn);
+  }
+  
+  btnBack.addEventListener('click', () => {
+    if (state.glyphs.length > 0) {
+      state.glyphs.pop();
+      updateGlyphUI();
+      renderCard();
+    }
+  });
+  
+  btnClear.addEventListener('click', () => {
+    state.glyphs = [];
+    updateGlyphUI();
+    renderCard();
+  });
+  
+  updateGlyphUI();
+}
+function updateGlyphUI() {
+  const seq = document.getElementById('glyph-sequence');
+  const btnBack = document.getElementById('btn-glyph-backspace');
+  const btnClear = document.getElementById('btn-glyph-clear');
+  
+  seq.innerHTML = '';
+  state.glyphs.forEach(g => {
+    const img = document.createElement('img');
+    img.src = __ASSET(`icons/glyphs/glyph_${g}.webp`);
+    img.alt = `Glyph ${g}`;
+    seq.appendChild(img);
+  });
+  
+  btnBack.disabled = state.glyphs.length === 0;
+  btnClear.disabled = state.glyphs.length === 0;
+}
 function setupFormListeners() {
   ['inp-name', 'inp-hp', 'inp-rarity', 'inp-number', 'inp-img-style'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', e => {
@@ -296,6 +350,7 @@ function renderCard() {
   }
   renderAttacks();
   renderAttrs();
+  renderCardGlyphs();
   const glowMap = {
     fire: 'rgba(255,100,0,0.4)', tropical: 'rgba(93,192,0,0.4)',
     anomalous: 'rgba(155,48,208,0.4)', toxic: 'rgba(128,187,0,0.4)',
@@ -337,6 +392,21 @@ function renderAttrs() {
     const rating = state.attrs[key];
     el.innerHTML = `<img src="${__ASSET('classes/CLASS.' + rating + '.webp')}" alt="${rating}" class="class-icon-card">`;
     el.className = 'attr-rating';
+  });
+}
+function renderCardGlyphs() {
+  const container = document.getElementById('prev-glyphs');
+  if (!state.glyphs || state.glyphs.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'flex';
+  container.innerHTML = '';
+  state.glyphs.forEach(g => {
+    const img = document.createElement('img');
+    img.src = __ASSET(`icons/glyphs/glyph_${g}.webp`);
+    img.alt = `Glyph ${g}`;
+    container.appendChild(img);
   });
 }
 function setupDownload() {

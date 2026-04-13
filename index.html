@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -84,6 +84,20 @@
               </div>
             </div>
             <button class="font-clear-btn" id="btn-font-clear" style="display:none">✕ Remove font</button>
+          </div>
+          <div class="glyph-section">
+            <div class="glyph-section-title">
+              <span>𖣘</span> Portal Glyphs
+            </div>
+            <p class="tab-hint" style="margin-top:0;">Max 12 glyphs. Click to add.</p>
+            <div class="glyph-input-display">
+              <div class="glyph-sequence" id="glyph-sequence"></div>
+              <button class="btn-icon" id="btn-glyph-backspace" title="Remove Last" disabled>⌫</button>
+              <button class="btn-icon" id="btn-glyph-clear" title="Clear All" disabled>✕</button>
+            </div>
+            <div class="glyph-picker" id="glyph-picker">
+              <!-- Glyph buttons injected by JS -->
+            </div>
           </div>
         </div>
         <div class="tab-panel" id="tab-type">
@@ -177,6 +191,9 @@
                 <span class="attr-label">HEALTH</span>
                 <span class="attr-rating rating-b" id="prev-health">B</span>
               </div>
+            </div>
+            <div class="card-glyphs" id="prev-glyphs" style="display: none;">
+              <!-- Glyphs injected here -->
             </div>
             <div class="card-footer">
               <span class="footer-num">No. <span id="prev-num">001</span></span>
