@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" class="scrollable-y">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xeno Arena Archive · No Man's Sky</title>
+  <link rel="icon" href="icons/logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .gallery-container {
+      max-width: 1400px;
+      margin: 100px auto 40px;
+      padding: 0 20px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 40px;
+      justify-items: center;
+    }
+
+    .gallery-item {
+      transform-origin: center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .archive-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .archive-header h2 {
+      font-family: 'NMSGeo', sans-serif;
+      font-size: 32px;
+      letter-spacing: 8px;
+      color: var(--teal);
+      text-shadow: 0 0 20px rgba(77, 207, 207, 0.5);
+    }
+
+    .back-nav {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .btn-back {
+      color: var(--teal);
+      text-decoration: none;
+      font-family: 'NMSGeo', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 10px 20px;
+      background: rgba(8, 18, 24, 0.8);
+      border: 1px solid var(--teal-dim);
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--teal);
+      color: #000;
+    }
+
+    .loading-status {
+      text-align: center;
+      color: var(--teal);
+      font-family: 'NMSGeo', sans-serif;
+      letter-spacing: 4px;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+
+<body class="scrollable-y">
+  <div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;"></div>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-brand" style="text-decoration: none;">
+        <img src="icons/logo.png" alt="Nokemon Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1 class="brand-title">Xeno Arena Database</h1>
+          <p class="brand-sub">No Man's Sky · Gallery</p>
+        </div>
+      </a>
+      <nav class="header-nav" style="display: flex; gap: 30px;">
+        <a href="generator.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">CARDS</a>
+        <a href="archive.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">GALLERY</a>
+        <a href="creatures.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">REGISTRY</a>
+      </nav>
+    </div>
+  </header>
+
+  <nav class="back-nav">
+    <a href="index.html" class="btn-back">← RETURN HOME</a>
+  </nav>
+
+  <main class="gallery-container">
+
+    <div class="archive-header">
+      <h2>DISCOVERED SPECIES</h2>
+    </div>
+    <div id="loading" class="loading-status">INITIALISING ATLAS LINK...</div>
+    <div id="gallery-grid" class="gallery-grid"></div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-text">
+        Not affiliated with Hello Games.<br>
+        Data upload is only performed with user authorization. No data will be collected without consent.
+      </div>
+      <div class="footer-credit">
+        DEVELOPED BY DELUXO (<a href="https://x.com/ElDeluxo" target="_blank">X: @ELDELUXO</a>)
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,es',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="env.js"></script>
+  <script src="assets.js"></script>
+  <script src="gallery.js"></script>
+</body>
+
+</html>

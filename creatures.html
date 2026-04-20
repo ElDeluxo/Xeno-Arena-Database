@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xeno Arena Registry · No Man's Sky</title>
+  <link rel="icon" href="icons/logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .database-container {
+      max-width: 1400px;
+      margin: 100px auto 40px;
+      padding: 0 20px;
+    }
+
+    .database-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .database-header h2 {
+      font-family: 'NMSGeo', sans-serif;
+      font-size: 32px;
+      letter-spacing: 8px;
+      color: var(--teal);
+      text-shadow: 0 0 20px rgba(77, 207, 207, 0.5);
+      text-transform: uppercase;
+    }
+
+    .db-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      background: rgba(8, 18, 24, 0.8);
+      border: 1px solid var(--teal-dim);
+      padding: 10px 20px;
+      color: var(--white);
+      font-family: 'NMSGeo', sans-serif;
+      font-size: 14px;
+      width: 100%;
+      max-width: 400px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box:focus {
+      border-color: var(--teal);
+    }
+
+    .table-wrapper {
+      background: rgba(8, 18, 24, 0.6);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'NMSGeo', sans-serif;
+      text-align: left;
+    }
+
+    thead {
+      background: rgba(77, 207, 207, 0.1);
+      border-bottom: 1px solid var(--teal-dim);
+    }
+
+    th {
+      padding: 20px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--teal);
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    th:hover {
+      background: rgba(77, 207, 207, 0.15);
+    }
+
+    th.sort-active {
+      color: var(--white);
+      background: rgba(77, 207, 207, 0.2);
+    }
+
+    td {
+      padding: 15px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border2);
+      color: var(--white);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .type-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .type-icon-small {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .rating-badge {
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .rank-S {
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold);
+    }
+
+    .rank-A {
+      color: var(--teal);
+    }
+
+    .rank-B {
+      color: var(--orange);
+    }
+
+    .rank-C {
+      color: var(--dim);
+    }
+
+    .loading-status {
+      text-align: center;
+      color: var(--teal);
+      font-family: 'NMSGeo', sans-serif;
+      letter-spacing: 4px;
+      margin: 100px 0;
+    }
+
+    .back-nav {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .btn-back {
+      color: var(--teal);
+      text-decoration: none;
+      font-family: 'NMSGeo', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 10px 20px;
+      background: rgba(8, 18, 24, 0.8);
+      border: 1px solid var(--teal-dim);
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .btn-back:hover {
+      background: var(--teal);
+      color: #000;
+    }
+  </style>
+</head>
+
+<body class="scrollable-y">
+  <div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;"></div>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-brand" style="text-decoration: none;">
+        <img src="icons/logo.png" alt="Nokemon Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1 class="brand-title">Xeno Arena Database</h1>
+          <p class="brand-sub">No Man's Sky · Registry</p>
+        </div>
+      </a>
+      <nav class="header-nav" style="display: flex; gap: 30px;">
+        <a href="generator.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">CARDS</a>
+        <a href="archive.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">GALLERY</a>
+        <a href="creatures.html" class="nav-link"
+          style="color: var(--white); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">REGISTRY</a>
+      </nav>
+    </div>
+  </header>
+
+  <nav class="back-nav">
+    <a href="index.html" class="btn-back">← RETURN HOME</a>
+  </nav>
+
+  <main class="database-container">
+    <div class="database-header">
+      <h2>GALACTIC SPECIES REGISTRY</h2>
+    </div>
+
+    <div class="db-controls">
+      <input type="text" id="search-input" class="search-box" placeholder="SEARCH BY NAME OR LOCATION...">
+      <div id="results-count" style="color: var(--dim); font-family: 'NMSGeo'; font-size: 10px; letter-spacing: 1px;">
+        SCANNING ATLAS RECORDS...
+      </div>
+    </div>
+
+    <div id="loading" class="loading-status">ESTABLISHING UPLINK...</div>
+
+    <div class="table-wrapper">
+      <table id="creatures-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable('name')">NAME ↕</th>
+            <th onclick="sortTable('type')">TYPE ↕</th>
+            <th onclick="sortTable('strength')">STRENGTH ↕</th>
+            <th onclick="sortTable('hp')">HEALTH ↕</th>
+            <th onclick="sortTable('combat')">COMBAT ↕</th>
+            <th onclick="sortTable('agility')">AGILITY ↕</th>
+            <th onclick="sortTable('location')">LOCATION ↕</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-text">
+        Not affiliated with Hello Games.<br>
+        Data upload is only performed with user authorization. No data will be collected without consent.
+      </div>
+      <div class="footer-credit">
+        DEVELOPED BY DELUXO (<a href="https://x.com/ElDeluxo" target="_blank">X: @ELDELUXO</a>)
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,es',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="env.js"></script>
+  <script src="assets.js"></script>
+  <script src="creatures.js"></script>
+</body>
+
+</html>

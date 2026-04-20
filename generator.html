@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xeno Arena Card Generator · No Man's Sky</title>
+  <meta name="description"
+    content="Generate custom Pokémon-style combat cards for No Man's Sky creatures. Inspired by the Xeno Arena update.">
+  <link rel="icon" href="icons/logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="scrollable-y">
+  <div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;"></div>
+
+  <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <header class="app-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-brand" style="text-decoration: none;">
+        <img src="icons/logo.png" alt="Nokemon Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1 class="brand-title">Xeno Arena Database</h1>
+          <p class="brand-sub">No Man's Sky · Xeno Arena Card Generator</p>
+        </div>
+      </a>
+      <nav class="header-nav" style="display: flex; gap: 30px;">
+        <a href="generator.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">CARDS</a>
+        <a href="archive.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">GALLERY</a>
+        <a href="creatures.html" class="nav-link"
+          style="color: var(--teal); text-decoration: none; font-family: 'NMSGeo'; font-size: 12px; letter-spacing: 2px;">REGISTRY</a>
+      </nav>
+
+    </div>
+    </div>
+  </header>
+  <main class="app-main">
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="editor-area">
+      <div class="editor-sidebar">
+        <div class="editor-title">◇ CUSTOMISATION</div>
+        <nav class="editor-tabs" id="editor-tabs">
+          <button class="tab-btn active" data-tab="info">
+            <img src="icons/genes.png" class="tab-btn-icon" alt=""><span data-i18n="tab_creature">CREATURE</span>
+          </button>
+          <button class="tab-btn" data-tab="type">
+            <img src="icons/fire.avif" class="tab-btn-icon" alt=""><span data-i18n="tab_type">TYPE</span>
+          </button>
+          <button class="tab-btn" data-tab="image">
+            <img src="icons/paw.webp" class="tab-btn-icon" alt=""><span data-i18n="tab_image">IMAGE</span>
+          </button>
+          <button class="tab-btn" data-tab="attacks">
+            <img src="icons/attack_normal.avif" class="tab-btn-icon" alt=""><span data-i18n="tab_attacks">ATTACKS</span>
+          </button>
+          <button class="tab-btn" data-tab="attrs">
+            <img src="classes/CLASS.S.webp" class="tab-btn-icon" alt=""><span data-i18n="tab_attrs">ATTRIBUTES</span>
+          </button>
+        </nav>
+        <div class="sidebar-actions" style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn-download" id="btn-download" data-i18n="btn_download">Download Card</button>
+          <button class="btn-save" id="btn-save">◇ SURVEY CLOUD DATA</button>
+          <a href="archive.html" class="btn-archive">VIEW ARCHIVE</a>
+        </div>
+      </div>
+      <div class="editor-content">
+        <div class="tab-panel active" id="tab-info">
+          <div class="form-group">
+            <label for="inp-name" data-i18n="lbl_name">Creature Name</label>
+            <input type="text" id="inp-name" placeholder="Creature Name" data-i18n="lbl_name" maxlength="22">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="inp-hp" data-i18n="lbl_hp">HP</label>
+              <input type="number" id="inp-hp" min="10" max="9999" value="120">
+            </div>
+            <div class="form-group">
+              <label for="inp-rarity" data-i18n="lbl_class">Class</label>
+              <select id="inp-rarity">
+                <option value="1">C</option>
+                <option value="2">B</option>
+                <option value="3" selected>A</option>
+                <option value="4">S</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="s-rank-pattern-group" style="display:none">
+            <label for="inp-s-pattern" data-i18n="lbl_s_pattern">S-Rank Background Pattern</label>
+            <select id="inp-s-pattern">
+              <option value="type" data-i18n="opt_type_logo">Type Logo</option>
+              <option value="atlas" data-i18n="opt_atlas_icon">Atlas Icon</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inp-location" data-i18n="lbl_location">Discovery Location</label>
+            <input type="text" id="inp-location" placeholder="System / Planet Name" data-i18n="ph_location"
+              maxlength="30">
+          </div>
+          <div class="form-group">
+            <label for="inp-number" data-i18n="lbl_card_number">Card Number</label>
+            <input type="text" id="inp-number" placeholder="---" maxlength="6" value="..." readonly
+              style="cursor: not-allowed; opacity: 0.8;">
+          </div>
+          <div class="font-section">
+            <div class="font-section-title">
+              <span data-i18n="lbl_custom_font"><span>Aa</span> Custom Card Font</span>
+            </div>
+            <div class="font-upload-row">
+              <input type="file" id="inp-font" accept=".ttf,.otf,.woff,.woff2" hidden>
+              <button class="font-upload-btn" id="btn-font-upload" data-i18n="btn_upload_font">
+                ↑ Upload Font
+              </button>
+              <span class="font-name-display" id="font-name-display" data-i18n="lbl_no_font">No font loaded</span>
+            </div>
+            <div class="font-scope-row">
+              <label class="font-scope-label" data-i18n="lbl_apply_to">Apply to:</label>
+              <div class="font-scope-btns">
+                <button class="scope-btn active" data-scope="name" id="scope-name" data-i18n="btn_name_only">Name
+                  only</button>
+                <button class="scope-btn" data-scope="card" id="scope-card" data-i18n="btn_whole_card">Whole
+                  card</button>
+              </div>
+            </div>
+            <button class="font-clear-btn" id="btn-font-clear" style="display:none" data-i18n="btn_remove_font">✕ Remove
+              font</button>
+          </div>
+          <div class="glyph-section">
+            <div class="glyph-section-title">
+              <span data-i18n="lbl_glyphs"><span>𖣘</span> Portal Glyphs</span>
+            </div>
+            <p class="tab-hint" style="margin-top:0;" data-i18n="hint_glyphs">Max 12 glyphs. Click to add.</p>
+            <div class="glyph-input-display">
+              <div class="glyph-sequence" id="glyph-sequence"></div>
+              <button class="btn-icon" id="btn-glyph-backspace" title="Remove Last" disabled>⌫</button>
+              <button class="btn-icon" id="btn-glyph-clear" title="Clear All" disabled>✕</button>
+            </div>
+            <div class="glyph-picker" id="glyph-picker">
+              <!-- Glyph buttons injected by JS -->
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="tab-type">
+          <p class="tab-hint" data-i18n="hint_type">Select the creature's environment type. This changes the card's
+            color scheme.</p>
+          <div class="type-grid" id="type-grid"></div>
+        </div>
+        <div class="tab-panel" id="tab-image">
+          <div class="image-drop-zone" id="image-drop-zone">
+            <input type="file" id="inp-image" accept="image/*" hidden>
+            <div class="drop-placeholder" id="drop-placeholder">
+              <div class="drop-icon">📷</div>
+              <p data-i18n="lbl_click_upload">Click to upload<br><span>JPG · PNG · WEBP</span></p>
+            </div>
+            <img id="drop-preview" class="drop-img-preview" style="display:none" alt="Creature">
+          </div>
+          <button class="btn-secondary" id="btn-remove-img" style="display:none; margin-top:8px"
+            data-i18n="btn_remove_img">✕ Remove Image</button>
+          <div class="form-row" id="art-style-row" style="display:none; margin-top:16px;">
+            <div class="form-group" style="margin:0;">
+              <label for="inp-img-style" data-i18n="lbl_art_style">Art Style</label>
+              <select id="inp-img-style">
+                <option value="normal" data-i18n="opt_normal">Normal (Cropped)</option>
+                <option value="fit" data-i18n="opt_fit">Fit Whole Image</option>
+                <option value="full" data-i18n="opt_full">Full Card Art</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label for="inp-flavor" data-i18n="lbl_flavor">Flavor Text</label>
+            <textarea id="inp-flavor" rows="3" maxlength="110"
+              placeholder="A creature of immense power, born from the cosmos..." data-i18n="ph_flavor"></textarea>
+            <div class="char-counter" id="flavor-counter">0 / 110</div>
+          </div>
+        </div>
+        <div class="tab-panel" id="tab-attacks">
+          <div id="attacks-editor"></div>
+        </div>
+        <div class="tab-panel" id="tab-attrs">
+          <p class="tab-hint" data-i18n="hint_attrs">Rate each attribute using the NMS class system.</p>
+          <div id="attributes-editor"></div>
+        </div>
+
+        <footer class="app-footer"
+          style="padding: 40px 10px; margin-top: 40px; background: transparent; border-top: 1px solid var(--border2);">
+          <div class="footer-content">
+            <div class="footer-text" style="font-size: 8px; letter-spacing: 1px;">
+              Not affiliated with Hello Games.<br>
+              Data upload is only performed with user authorization. No data will be collected without consent.
+            </div>
+            <div class="footer-credit" style="font-size: 10px; letter-spacing: 2px;">
+              DEVELOPED BY DELUXO (<a href="https://x.com/ElDeluxo" target="_blank">X: @ELDELUXO</a>)
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <section class="preview-panel">
+      <div class="preview-sticky">
+        <div class="preview-label" data-i18n="lbl_preview">Live Preview</div>
+        <div class="card-wrapper">
+          <div class="card" id="card" data-type="fire">
+            <div class="card-patterns" id="prev-patterns"></div>
+            <img id="card-full-bg" class="card-full-bg" src="" style="display:none" alt="">
+            <div class="card-full-overlay"></div>
+            <div class="card-shine"></div>
+            <div class="card-header">
+              <div class="card-name-block">
+                <div class="card-stage" data-i18n="card_stage">XENO CREATURE</div>
+                <div class="card-name" id="prev-name">Creature Name</div>
+              </div>
+              <div class="card-hp-block">
+                <span class="hp-label">HP</span>
+                <span class="hp-value" id="prev-hp">120</span>
+                <div class="card-type-badge" id="prev-type-icon">
+                  <img src="icons/fire.avif" alt="FIRE" class="type-badge-img">
+                </div>
+              </div>
+            </div>
+            <div class="card-illus-frame">
+              <div class="card-location" id="prev-location"></div>
+              <div class="card-illus-inner" id="prev-illus">
+                <div class="illus-empty">
+                  <span>📷</span>
+                  <p>Upload your creature</p>
+                </div>
+              </div>
+              <div class="illus-caption">
+                <span class="illus-type-tag" id="prev-type-tag">FIRE</span>
+                <span class="illus-rarity-tag rating-a" id="prev-rarity-tag">A</span>
+              </div>
+            </div>
+            <div class="card-flavor" id="prev-flavor">...
+            </div>
+            <div class="card-hr"></div>
+            <div class="card-attacks" id="prev-attacks"></div>
+            <div class="card-hr"></div>
+            <div class="card-attrs">
+              <div class="card-attr-item">
+                <span class="attr-label" data-i18n="attr_combat">COMBAT POT.</span>
+                <span class="attr-rating rating-a" id="prev-combat">A</span>
+              </div>
+              <div class="card-attr-item">
+                <span class="attr-label" data-i18n="attr_agility">AGILITY</span>
+                <span class="attr-rating rating-b" id="prev-agility">B</span>
+              </div>
+              <div class="card-attr-item">
+                <span class="attr-label" data-i18n="attr_health">HEALTH</span>
+                <span class="attr-rating rating-b" id="prev-health">B</span>
+              </div>
+            </div>
+            <div class="card-glyphs" id="prev-glyphs" style="display: none;">
+            </div>
+            <div class="card-footer">
+              <span class="footer-num">No. <span id="prev-num">001</span></span>
+              <span class="footer-brand" data-i18n="card_footer">NO MAN'S SKY · XENO ARENA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,es',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="env.js"></script>
+  <script src="assets.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

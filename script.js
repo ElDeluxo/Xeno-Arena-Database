@@ -9,6 +9,16 @@ const TYPES = {
   ice: { name: 'ICE', icon: 'icons/cold.avif' },
   mechanical: { name: 'MECHANICAL', icon: 'icons/mecanical.avif' },
 };
+const staticTranslations = {
+  type_fire: "FIRE", type_tropical: "TROPICAL", type_anomalous: "ANOMALOUS",
+  type_toxic: "TOXIC", type_radioactive: "RADIOACTIVE", type_desert: "DESERT",
+  type_ice: "ICE", type_mechanical: "MECHANICAL",
+  attack_label: "Attack", atk_type: "Type", atk_name: "Name", atk_dmg: "Damage",
+  atk_desc: "Description", ph_atk_name: "Attack name", ph_atk_desc: "Effect description...",
+  attr_combat: "COMBAT POT.", attr_agility: "AGILITY", attr_health: "HEALTH"
+};
+const t = key => staticTranslations[key] || key;
+
 const RARITY_LABELS = { '1': 'C', '2': 'B', '3': 'A', '4': 'S' };
 const RARITY_CLASSES = { '1': 'rating-c', '2': 'rating-b', '3': 'rating-a', '4': 'rating-s' };
 const CLASS_ICONS = { 'C': 'classes/CLASS.C.webp', 'B': 'classes/CLASS.B.webp', 'A': 'classes/CLASS.A.webp', 'S': 'classes/CLASS.S.webp' };
@@ -22,6 +32,8 @@ const state = {
   fontScope: 'name',
   imageStyle: 'normal',
   glyphs: [],
+  location: '',
+  sPattern: 'type',
 };
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
@@ -33,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupGlyphs();
   setupFormListeners();
   setupDownload();
+  setupMobileMenu();
+  updateNextCardNumber();
   renderCard();
 });
 function initTabs() {
@@ -48,11 +62,13 @@ function initTabs() {
 }
 function buildTypeGrid() {
   const grid = document.getElementById('type-grid');
-  Object.entries(TYPES).forEach(([key, t]) => {
+  grid.innerHTML = '';
+  Object.entries(TYPES).forEach(([key, val]) => {
     const btn = document.createElement('button');
     btn.className = 'type-btn' + (key === state.currentType ? ' active' : '');
     btn.dataset.type = key;
-    btn.innerHTML = `<img class="type-icon-img" src="${__ASSET(t.icon)}" alt="${t.name}"><span>${t.name}</span>`;
+    const typeName = t('type_' + key);
+    btn.innerHTML = `<img class="type-icon-img" src="${__ASSET(val.icon)}" alt="${typeName}"><span>${typeName}</span>`;
     btn.addEventListener('click', () => selectType(key));
     grid.appendChild(btn);
   });
@@ -70,13 +86,13 @@ function buildAttacksEditor() {
     const div = document.createElement('div');
     div.className = 'attack-editor-row';
     div.innerHTML = `
-      <div class="attack-row-header">Attack ${i + 1}</div>
+      <div class="attack-row-header">${t('attack_label')} ${i + 1}</div>
       <div class="attack-fields">
         <div class="attack-type-name-dmg">
           <div class="form-group" style="margin:0">
-            <label>Type</label>
+            <label>${t('atk_type')}</label>
             <select id="atk-type-${i}">
-              <option value="type">Type</option>
+              <option value="type">${t('atk_type')}</option>
               <option value="normal">Normal</option>
               <option value="shield">Shield</option>
               <option value="reflect">Reflect</option>
@@ -87,17 +103,17 @@ function buildAttacksEditor() {
             </select>
           </div>
           <div class="form-group" style="margin:0">
-            <label>Name</label>
-            <input type="text" id="atk-name-${i}" placeholder="Attack name" maxlength="20">
+            <label>${t('atk_name')}</label>
+            <input type="text" id="atk-name-${i}" placeholder="${t('ph_atk_name')}" maxlength="20" value="${atk.name}">
           </div>
           <div class="form-group" style="margin:0">
-            <label>Damage</label>
-            <input type="number" id="atk-dmg-${i}" placeholder="0" min="0" max="999">
+            <label>${t('atk_dmg')}</label>
+            <input type="number" id="atk-dmg-${i}" placeholder="0" min="0" max="999" value="${atk.dmg}">
           </div>
         </div>
         <div class="form-group" style="margin:0; margin-top:8px;">
-          <label>Description</label>
-          <input type="text" id="atk-desc-${i}" placeholder="Effect description..." maxlength="55">
+          <label>${t('atk_desc')}</label>
+          <input type="text" id="atk-desc-${i}" placeholder="${t('ph_atk_desc')}" maxlength="55" value="${atk.desc}">
         </div>
       </div>`;
     container.appendChild(div);
@@ -115,7 +131,12 @@ const ATTR_DEFS = [
 function buildAttributesEditor() {
   const container = document.getElementById('attributes-editor');
   container.innerHTML = '';
-  ATTR_DEFS.forEach(({ key, label, icon }) => {
+  const defs = [
+    { key: 'combat', label: t('attr_combat') },
+    { key: 'agility', label: t('attr_agility') },
+    { key: 'health', label: t('attr_health') },
+  ];
+  defs.forEach(({ key, label }) => {
     const div = document.createElement('div');
     div.className = 'attr-editor-row';
     div.innerHTML = `
@@ -227,7 +248,7 @@ function setupGlyphs() {
   const picker = document.getElementById('glyph-picker');
   const btnBack = document.getElementById('btn-glyph-backspace');
   const btnClear = document.getElementById('btn-glyph-clear');
-  
+
   for (let i = 0; i < 16; i++) {
     const btn = document.createElement('button');
     btn.className = 'glyph-btn';
@@ -242,7 +263,7 @@ function setupGlyphs() {
     });
     picker.appendChild(btn);
   }
-  
+
   btnBack.addEventListener('click', () => {
     if (state.glyphs.length > 0) {
       state.glyphs.pop();
@@ -250,20 +271,20 @@ function setupGlyphs() {
       renderCard();
     }
   });
-  
+
   btnClear.addEventListener('click', () => {
     state.glyphs = [];
     updateGlyphUI();
     renderCard();
   });
-  
+
   updateGlyphUI();
 }
 function updateGlyphUI() {
   const seq = document.getElementById('glyph-sequence');
   const btnBack = document.getElementById('btn-glyph-backspace');
   const btnClear = document.getElementById('btn-glyph-clear');
-  
+
   seq.innerHTML = '';
   state.glyphs.forEach(g => {
     const img = document.createElement('img');
@@ -271,14 +292,16 @@ function updateGlyphUI() {
     img.alt = `Glyph ${g}`;
     seq.appendChild(img);
   });
-  
+
   btnBack.disabled = state.glyphs.length === 0;
   btnClear.disabled = state.glyphs.length === 0;
 }
 function setupFormListeners() {
-  ['inp-name', 'inp-hp', 'inp-rarity', 'inp-number', 'inp-img-style'].forEach(id => {
+  ['inp-name', 'inp-hp', 'inp-rarity', 'inp-number', 'inp-img-style', 'inp-location', 'inp-s-pattern'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', e => {
       if (id === 'inp-img-style') state.imageStyle = e.target.value;
+      if (id === 'inp-location') state.location = e.target.value;
+      if (id === 'inp-s-pattern') state.sPattern = e.target.value;
       renderCard();
     });
   });
@@ -292,11 +315,26 @@ function setupFormListeners() {
 function renderCard() {
   const card = document.getElementById('card');
   const type = state.currentType;
-  const t = TYPES[type];
+  const typeObj = TYPES[type];
   card.dataset.type = type;
   const typeBadge = document.getElementById('prev-type-icon');
-  typeBadge.innerHTML = `<img src="${__ASSET(t.icon)}" alt="${t.name}" class="type-badge-img">`;
-  document.getElementById('prev-type-tag').textContent = t.name;
+  const typeName = t('type_' + type);
+  typeBadge.innerHTML = `<img src="${__ASSET(typeObj.icon)}" alt="${typeName}" class="type-badge-img">`;
+  document.getElementById('prev-type-tag').textContent = typeName;
+
+  const rarVal = document.getElementById('inp-rarity').value;
+  const isS = rarVal === '4';
+  const patternGroup = document.getElementById('s-rank-pattern-group');
+  if (patternGroup) patternGroup.style.display = isS ? 'block' : 'none';
+
+  if (isS) {
+    card.classList.add('is-s-rank');
+    renderSRankPatterns();
+  } else {
+    card.classList.remove('is-s-rank');
+    document.getElementById('prev-patterns').innerHTML = '';
+  }
+
   const name = document.getElementById('inp-name').value.trim() || 'Creature Name';
   const nameEl = document.getElementById('prev-name');
   nameEl.textContent = name;
@@ -319,6 +357,10 @@ function renderCard() {
   rarTag.innerHTML = `<img src="${__ASSET('classes/CLASS.' + rarLetter + '.webp')}" alt="${rarLetter}" class="class-icon-card">`;
   rarTag.className = 'illus-rarity-tag';
   document.getElementById('prev-num').textContent = document.getElementById('inp-number').value.trim() || '001';
+
+  const locEl = document.getElementById('prev-location');
+  locEl.textContent = state.location.trim();
+
   const flavor = document.getElementById('inp-flavor').value.trim();
   document.getElementById('prev-flavor').textContent = flavor;
   const illusInner = document.getElementById('prev-illus');
@@ -409,6 +451,25 @@ function renderCardGlyphs() {
     container.appendChild(img);
   });
 }
+
+function renderSRankPatterns() {
+  const container = document.getElementById('prev-patterns');
+  container.innerHTML = '';
+
+  const iconPath = state.sPattern === 'atlas'
+    ? 'icons/glyphs/atlas.png'
+    : TYPES[state.currentType].icon;
+
+  for (let i = 0; i < 24; i++) {
+    const div = document.createElement('div');
+    div.className = 'pattern-unit';
+    div.style.backgroundImage = `url(${__ASSET(iconPath)})`;
+    container.appendChild(div);
+  }
+}
+
+
+
 function setupDownload() {
   document.getElementById('btn-download').addEventListener('click', downloadCard);
 }
@@ -445,3 +506,117 @@ async function downloadCard() {
   btn.classList.remove('loading');
   btn.innerHTML = '<span>⬇</span> Download Card';
 }
+function setupMobileMenu() {
+  const toggle = document.getElementById('menu-toggle');
+  const overlay = document.getElementById('drawer-overlay');
+  const editor = document.querySelector('.editor-area');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+
+  if (!toggle || !overlay || !editor) return;
+
+  const toggleMenu = () => {
+    toggle.classList.toggle('is-active');
+    overlay.classList.toggle('is-active');
+    editor.classList.toggle('is-active');
+  };
+
+  const closeMenu = () => {
+    toggle.classList.remove('is-active');
+    overlay.classList.remove('is-active');
+    editor.classList.remove('is-active');
+  };
+
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  overlay.addEventListener('click', closeMenu);
+
+
+}
+const SUPABASE_URL = (typeof ENV !== 'undefined') ? ENV.SUPABASE_URL : '';
+const SUPABASE_ANON_KEY = (typeof ENV !== 'undefined') ? ENV.SUPABASE_ANON_KEY : '';
+
+let supabaseClient = null;
+if (SUPABASE_URL) {
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+async function saveToCloud() {
+  if (!supabaseClient) {
+    return;
+  }
+
+  const btn = document.getElementById('btn-save');
+  const originalText = btn.innerText;
+  btn.innerText = 'SCANNING CARD...';
+  btn.disabled = true;
+
+  try {
+    const cardEl = document.querySelector('.card');
+    const canvas = await html2canvas(cardEl, {
+      useCORS: true,
+      backgroundColor: null,
+      scale: 1.5
+    });
+    const cardImageBase64 = canvas.toDataURL('image/webp', 0.8);
+
+    const cardData = {
+      name: document.getElementById('inp-name').value || 'Unnamed',
+      hp: document.getElementById('inp-hp').value || '0',
+      type: state.currentType,
+      class: state.attrs.combat,
+      attacks: state.attacks,
+      attributes: state.attrs,
+      location: state.location,
+      image_data: state.imageDataUrl,
+      card_image: cardImageBase64,
+      card_number: document.getElementById('inp-number').value
+    };
+
+    const { error } = await supabaseClient
+      .from('nokemons')
+      .insert([cardData]);
+
+    if (error) throw error;
+
+    alert('◇ DISCOVERY STORED IN THE DATABASE ◇\n\nYour creation is now under review by the Atlas Command. It will appear in the archive once authorized.');
+    updateNextCardNumber();
+  } catch (err) {
+    console.error(err);
+    alert('DATABASE ERROR: ' + err.message);
+  } finally {
+    btn.innerText = originalText;
+    btn.disabled = false;
+  }
+}
+
+
+async function updateNextCardNumber() {
+  if (!supabaseClient) return;
+
+  try {
+    const { count, error } = await supabaseClient
+      .from('nokemons')
+      .select('*', { count: 'exact', head: true });
+
+    if (error) throw error;
+
+    const nextNum = (count + 1).toString().padStart(3, '0');
+    const inpNum = document.getElementById('inp-number');
+    if (inpNum) {
+      inpNum.value = nextNum;
+      renderCard();
+    }
+  } catch (err) {
+    console.warn('Error fetching card count:', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const saveBtn = document.getElementById('btn-save');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveToCloud);
+  }
+});
